@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "269336677409",
+    "firebase_url": "https://psu-ssc-voting-app.firebaseio.com",
+    "project_id": "psu-ssc-voting-app",
+    "storage_bucket": "psu-ssc-voting-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:269336677409:android:fd6adb3ee955fd44",
+        "android_client_info": {
+          "package_name": "psuva.com.ph.psuvotingsystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "269336677409-0968sn3vr1cab3qc2bo8dg6o9ugib8ts.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "psuva.com.ph.psuvotingsystem",
+            "certificate_hash": "e539a715e4482a3a6aa076a0833b3897fbe6b003"
+          }
+        },
+        {
+          "client_id": "269336677409-mr7u6nvhdb89jo9aqv6s9jnpsk5r4ass.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4z9ijV82mMfOfWAHri9tHHjeXshs_Wp8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "269336677409-mr7u6nvhdb89jo9aqv6s9jnpsk5r4ass.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

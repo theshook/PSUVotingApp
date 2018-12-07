@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">PSU Voting System</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="Positions">
+        <item>President</item>
+        <item>Executing Vice President</item>
+        <item>VC for Project and Activities</item>
+        <item>VC for Communication</item>
+        <item>VC for Student Rights and Welfare</item>
+        <item>Auditor</item>
+        <item>Business Manager</item>
+        <item>Public Relations Office</item>
+    </string-array>
+
+    <string-array name="PartyList">
+        <item>Mahal</item>
+        <item>Third Party List</item>
+    </string-array>
+
+    <string-array name="Course">
+        <item>BSIT</item>
+        <item>BSE</item>
+        <item>BEE</item>
+        <item>BSBA</item>
+        <item>AIT/BIT</item>
+    </string-array>
+</resources>
