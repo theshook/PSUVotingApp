@@ -27,11 +27,14 @@ public class VoterAdd extends AppCompatActivity {
   private EditText edtFname, edtLname, edtNumber, edtEmail;
   private Spinner spinPosition;
   private Button btnSave;
+  private Voter voterDetails;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_voter_add);
+
+    voterDetails = (Voter) getIntent().getSerializableExtra("voterDetails");
 
     edtFname = findViewById(R.id.txt_p_firstName2);
     edtLname = findViewById(R.id.txt_v_lastName);
@@ -97,6 +100,18 @@ public class VoterAdd extends AppCompatActivity {
                     if (task.isSuccessful()) {
                       Toast.makeText(VoterAdd.this, "Succesfully saved.", Toast.LENGTH_SHORT).show();
                       Intent i = new Intent(VoterAdd.this, MainActivity.class);
+
+                      Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+                      Voter v = new Voter(
+                              voterDetails.getVote_FirstName(),
+                              voterDetails.getVote_LastName(),
+                              voterDetails.getVote_Course(),
+                              voterDetails.getVote_IdNumber(),
+                              voterDetails.getVote_email(),
+                              isVoted);
+                      v.setId(voterDetails.getId());
+                      i.putExtra("voterDetails", v);
+
                       i.putExtra("frgToLoad", "nav_slideshow");
                       startActivity(i);
                       finish();

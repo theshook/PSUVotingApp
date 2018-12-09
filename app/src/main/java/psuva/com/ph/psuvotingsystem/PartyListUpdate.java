@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Map;
+
 public class PartyListUpdate extends AppCompatActivity {
   private FirebaseFirestore db;
   private PartyList partyList;
@@ -26,6 +28,7 @@ public class PartyListUpdate extends AppCompatActivity {
   private EditText edtFname, edtLname;
   private Spinner spinParty, spinPosition;
   private Button btnSave, btnDelete;
+  private Voter voterDetails;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,7 @@ public class PartyListUpdate extends AppCompatActivity {
 
     db = FirebaseFirestore.getInstance();
     partyList = (PartyList) getIntent().getSerializableExtra("partyList");
+    voterDetails = (Voter) getIntent().getSerializableExtra("voterDetails");
 
     edtFname = findViewById(R.id.txt_p_firstName2);
     edtLname = findViewById(R.id.txt_v_lastName);
@@ -86,6 +90,17 @@ public class PartyListUpdate extends AppCompatActivity {
                   if (task.isSuccessful()) {
                     Toast.makeText(PartyListUpdate.this, "Candidate Information Deleted.", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(PartyListUpdate.this, MainActivity.class);
+
+                    Voter v = new Voter(
+                            voterDetails.getVote_FirstName(),
+                            voterDetails.getVote_LastName(),
+                            voterDetails.getVote_Course(),
+                            voterDetails.getVote_IdNumber(),
+                            voterDetails.getVote_email(),
+                            voterDetails.getIsVoted());
+                    v.setId(voterDetails.getId());
+                    i.putExtra("voterDetails", v);
+
                     i.putExtra("frgToLoad", "nav_gallery");
                     startActivity(i);
                     finish();
@@ -137,6 +152,18 @@ public class PartyListUpdate extends AppCompatActivity {
                   public void onSuccess(Void aVoid) {
                     Toast.makeText(PartyListUpdate.this, "Succesfully saved.", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(PartyListUpdate.this, MainActivity.class);
+
+                    Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+                    Voter v = new Voter(
+                            voterDetails.getVote_FirstName(),
+                            voterDetails.getVote_LastName(),
+                            voterDetails.getVote_Course(),
+                            voterDetails.getVote_IdNumber(),
+                            voterDetails.getVote_email(),
+                            isVoted);
+                    v.setId(voterDetails.getId());
+                    i.putExtra("voterDetails", v);
+
                     i.putExtra("frgToLoad", "nav_gallery");
                     startActivity(i);
                     finish();

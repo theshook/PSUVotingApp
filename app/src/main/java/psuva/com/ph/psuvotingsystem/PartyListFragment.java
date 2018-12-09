@@ -30,7 +30,7 @@ public class PartyListFragment extends Fragment {
   TextView txt_p_add;
   private RecyclerView recyclerView;
   private RecyclerView.Adapter recyclerAdapter;
-
+  private Voter voterDetails;
   private List<PartyList> partyLists;
 
   public PartyListFragment() {
@@ -45,6 +45,8 @@ public class PartyListFragment extends Fragment {
     View view =  inflater.inflate(R.layout.fragment_party_list, container, false);
 
     db = FirebaseFirestore.getInstance();
+
+    voterDetails = (Voter) getActivity().getIntent().getSerializableExtra("voterDetails");
 
     recyclerView = view.findViewById(R.id.recyclerView);
     recyclerView.setHasFixedSize(true);
@@ -83,6 +85,15 @@ public class PartyListFragment extends Fragment {
       @Override
       public void onClick(View view) {
         Intent intent = new Intent(getContext(), PartyListAdd.class);
+        Voter v = new Voter(
+                voterDetails.getVote_FirstName(),
+                voterDetails.getVote_LastName(),
+                voterDetails.getVote_Course(),
+                voterDetails.getVote_IdNumber(),
+                voterDetails.getVote_email(),
+                voterDetails.getIsVoted());
+        v.setId(voterDetails.getId());
+        intent.putExtra("voterDetails", v);
         startActivity(intent);
       }
     });

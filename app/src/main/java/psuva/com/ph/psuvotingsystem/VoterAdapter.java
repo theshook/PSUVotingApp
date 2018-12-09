@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -55,8 +56,17 @@ public class VoterAdapter  extends RecyclerView.Adapter<VoterAdapter.ViewHolder>
     @Override
     public void onClick(View view) {
       Voter voter = voterList.get(getAdapterPosition());
-
+      Voter voterDetails = (Voter) ((Activity) context).getIntent().getSerializableExtra("voterDetails");
       Intent intent = new Intent(context, VoterUpdate.class);
+      Voter v = new Voter(
+              voterDetails.getVote_FirstName(),
+              voterDetails.getVote_LastName(),
+              voterDetails.getVote_Course(),
+              voterDetails.getVote_IdNumber(),
+              voterDetails.getVote_email(),
+              voterDetails.getIsVoted());
+      v.setId(voterDetails.getId());
+      intent.putExtra("voterDetails", v);
       intent.putExtra("voter", voter);
       context.startActivity(intent);
     }

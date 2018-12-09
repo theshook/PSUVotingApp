@@ -81,13 +81,6 @@ public class LoginActivity extends AppCompatActivity {
                 Object p = document.get("vote_IdNumber");
                 if(username.equals(u) && password.equals(p)) {
                   Intent i = new Intent(LoginActivity.this, MainActivity.class);
-//                TODO: PASS THE LOGIN DETAILS
-//                  for (Map<String, Object> map : list) {
-//                    for (Map.Entry<String, Object> entry : map.entrySet()) {
-//                      String key = entry.getKey();
-//                      Object value = entry.getValue();
-//                    }
-//                  }
                   Log.d("TAG THIS PARTY LIST GET", "onClick: " + document.get("isVoted").equals("president"));
                   Map<String, Boolean> isVoted = (Map<String, Boolean>) document.get("isVoted");
                   Voter voterDetails = new Voter(

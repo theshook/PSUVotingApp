@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,8 @@ public class PartyListAdapter extends RecyclerView.Adapter<PartyListAdapter.View
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View v = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.list_partylist, parent, false);
+
+
     return new ViewHolder(v);
   }
 
@@ -43,6 +46,7 @@ public class PartyListAdapter extends RecyclerView.Adapter<PartyListAdapter.View
   public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public TextView txtName, txtPosition;
+    private Voter voterDetails;
 
     public ViewHolder(View itemView) {
       super(itemView);
@@ -56,8 +60,17 @@ public class PartyListAdapter extends RecyclerView.Adapter<PartyListAdapter.View
     @Override
     public void onClick(View view) {
       PartyList partyList = listItemList.get(getAdapterPosition());
-
+      Voter voterDetails = (Voter) ((Activity) context).getIntent().getSerializableExtra("voterDetails");
       Intent intent = new Intent(context, PartyListUpdate.class);
+      Voter v = new Voter(
+              voterDetails.getVote_FirstName(),
+              voterDetails.getVote_LastName(),
+              voterDetails.getVote_Course(),
+              voterDetails.getVote_IdNumber(),
+              voterDetails.getVote_email(),
+              voterDetails.getIsVoted());
+      v.setId(voterDetails.getId());
+      intent.putExtra("voterDetails", v);
       intent.putExtra("partyList", partyList);
       context.startActivity(intent);
     }

@@ -30,6 +30,7 @@ public class VoterUpdate extends AppCompatActivity {
   private EditText edtFname, edtLname, edtNumber, edtEmail;
   private Spinner spinPosition;
   private Button btnSave, btnDelete;
+  private Voter voterDetails;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class VoterUpdate extends AppCompatActivity {
 
     db = FirebaseFirestore.getInstance();
     voter = (Voter) getIntent().getSerializableExtra("voter");
+    voterDetails = (Voter) getIntent().getSerializableExtra("voterDetails");
 
     edtFname = findViewById(R.id.txt_v_firstName);
     edtLname = findViewById(R.id.txt_v_lastName);
@@ -86,6 +88,18 @@ public class VoterUpdate extends AppCompatActivity {
                         if (task.isSuccessful()) {
                           Toast.makeText(VoterUpdate.this, "Voter Information Deleted.", Toast.LENGTH_SHORT).show();
                           Intent i = new Intent(VoterUpdate.this, MainActivity.class);
+
+                          Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+                          Voter v = new Voter(
+                                  voterDetails.getVote_FirstName(),
+                                  voterDetails.getVote_LastName(),
+                                  voterDetails.getVote_Course(),
+                                  voterDetails.getVote_IdNumber(),
+                                  voterDetails.getVote_email(),
+                                  isVoted);
+                          v.setId(voterDetails.getId());
+                          i.putExtra("voterDetails", v);
+
                           i.putExtra("frgToLoad", "nav_slideshow");
                           startActivity(i);
                           finish();
@@ -147,6 +161,18 @@ public class VoterUpdate extends AppCompatActivity {
                   public void onSuccess(Void aVoid) {
                     Toast.makeText(VoterUpdate.this, "Succesfully saved.", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(VoterUpdate.this, MainActivity.class);
+
+                    Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+                    Voter v = new Voter(
+                            voterDetails.getVote_FirstName(),
+                            voterDetails.getVote_LastName(),
+                            voterDetails.getVote_Course(),
+                            voterDetails.getVote_IdNumber(),
+                            voterDetails.getVote_email(),
+                            isVoted);
+                    v.setId(voterDetails.getId());
+                    i.putExtra("voterDetails", v);
+
                     i.putExtra("frgToLoad", "nav_slideshow");
                     startActivity(i);
                     finish();

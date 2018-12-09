@@ -1,6 +1,8 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -74,8 +76,29 @@ public class StudentRightsActivity extends AppCompatActivity {
           Toast.makeText(StudentRightsActivity.this, "Kindly select to vote.", Toast.LENGTH_SHORT).show();
           return;
         }
-        countVotes(db.collection("partylist").document(StudentRightsAdapter._id));
-        updateVoter();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(StudentRightsActivity.this);
+        AlertDialog ad;
+        builder.setTitle("Are you sure about this?");
+        builder.setMessage("Voting is permanent and cannot be change later");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+            countVotes(db.collection("partylist").document(StudentRightsAdapter._id));
+            updateVoter();
+
+          }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+
+          }
+        });
+        ad = builder.create();
+        ad.show();
+
+
       }
     });
   }

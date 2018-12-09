@@ -1,7 +1,9 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -74,19 +76,34 @@ public class PresidentActivity extends AppCompatActivity {
     btnNext.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-//        for(int i = 0, nsize = BusinessManagerAdapter.ids.size(); i < nsize; i++) {
-//          Object obj = BusinessManagerAdapter.ids.valueAt(i);
-//          Log.d("TAG THIS PARTY LIST GET", "onClick: " + obj.toString());
-//        }
 
         if (PresidentAdapter._id.equals(null) || PresidentAdapter._id.equals("")) {
           Toast.makeText(PresidentActivity.this, "Kindly select a President to vote.", Toast.LENGTH_SHORT).show();
           return;
         }
 
-        countVotes(db.collection("partylist").document(PresidentAdapter._id));
-        updateVoter();
+        AlertDialog.Builder builder = new AlertDialog.Builder(PresidentActivity.this);
+        AlertDialog ad;
+        builder.setTitle("Are you sure about this?");
+        builder.setMessage("Voting is permanent and cannot be change later");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+            countVotes(db.collection("partylist").document(PresidentAdapter._id));
+            updateVoter();
 
+          }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+
+          }
+        });
+
+        ad = builder.create();
+        ad.show();
       }
     });
   }

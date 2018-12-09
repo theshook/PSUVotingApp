@@ -1,6 +1,8 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -71,16 +73,37 @@ public class PublicRelationsOfficeActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
 
-        if (BusinessManagerAdapter.ids.size() <= 0) {
+        if (PublicRelationsOfficeAdapter.ids.size() <= 0) {
           Toast.makeText(PublicRelationsOfficeActivity.this, "Kindly select to vote.", Toast.LENGTH_SHORT).show();
           return;
         }
-        for(int i = 0, nsize = PublicRelationsOfficeAdapter.ids.size(); i < nsize; i++) {
-          Object obj = PublicRelationsOfficeAdapter.ids.valueAt(i);
-          countVotes(db.collection("partylist").document(obj.toString()));
-          Log.d("TAG THIS PARTY LIST GET", "onClick: " + obj.toString());
-        }
-        updateVoter();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(PublicRelationsOfficeActivity.this);
+        AlertDialog ad;
+        builder.setTitle("Are you sure about this?");
+        builder.setMessage("Voting is permanent and cannot be change later");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+            for(int in = 0, nsize = PublicRelationsOfficeAdapter.ids.size(); in < nsize; in++) {
+              Object obj = PublicRelationsOfficeAdapter.ids.valueAt(in);
+              countVotes(db.collection("partylist").document(obj.toString()));
+              Log.d("TAG THIS PARTY LIST GET", "onClick: " + obj.toString());
+            }
+            updateVoter();
+
+          }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+
+          }
+        });
+        ad = builder.create();
+        ad.show();
+
+
       }
     });
   }
