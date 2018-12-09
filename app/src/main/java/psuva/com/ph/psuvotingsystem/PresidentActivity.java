@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -41,13 +42,15 @@ public class PresidentActivity extends AppCompatActivity {
   private List<PartyList> partyLists;
   private Voter voterDetails;
 
+  private ProgressDialog pd;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_president);
 
     db = FirebaseFirestore.getInstance();
-
+    pd = new ProgressDialog(PresidentActivity.this);
     voterDetails = (Voter) getIntent().getSerializableExtra("voterDetails");
     Log.d("TAG THIS PARTY LIST GET", "President Activity: " + voterDetails.getId());
     recyclerView = findViewById(R.id.recyclerView);
@@ -77,6 +80,11 @@ public class PresidentActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
 
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage("Fetching data. . . ");
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
+
         if (PresidentAdapter._id.equals(null) || PresidentAdapter._id.equals("")) {
           Toast.makeText(PresidentActivity.this, "Kindly select a President to vote.", Toast.LENGTH_SHORT).show();
           return;
@@ -89,8 +97,14 @@ public class PresidentActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int i) {
+
+
+            pd.show();
+
             countVotes(db.collection("partylist").document(PresidentAdapter._id));
             updateVoter();
+
+            pd.dismiss();
 
           }
         });
@@ -111,30 +125,33 @@ public class PresidentActivity extends AppCompatActivity {
   private void updateVoter() {
     db.collection("voter").document(voterDetails.getId())
       .update("isVoted.president", true)
-      .addOnSuccessListener(new OnSuccessListener<Void>() {
+      .addOnCompleteListener(new OnCompleteListener<Void>() {
         @Override
-        public void onSuccess(Void aVoid) {
-          Toast.makeText(PresidentActivity.this, "Succesfully voted.", Toast.LENGTH_SHORT).show();
-          Intent i = new Intent(PresidentActivity.this, MainActivity.class);
+        public void onComplete(@NonNull Task<Void> task) {
+          if (task.isSuccessful()) {
+            Toast.makeText(PresidentActivity.this, "Succesfully voted.", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(PresidentActivity.this, MainActivity.class);
 
-          Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+            Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
 
-          if (isVoted.containsKey("president")) {
-            isVoted.put("president", true);
+            if (isVoted.containsKey("president")) {
+              isVoted.put("president", true);
+            }
+
+            Voter v = new Voter(
+                    voterDetails.getVote_FirstName(),
+                    voterDetails.getVote_LastName(),
+                    voterDetails.getVote_Course(),
+                    voterDetails.getVote_IdNumber(),
+                    voterDetails.getVote_email(),
+                    isVoted);
+            v.setId(voterDetails.getId());
+            i.putExtra("voterDetails", v);
+            i.putExtra("frgToLoad", "nav_camera");
+
+            startActivity(i);
+            finish();
           }
-
-          Voter v = new Voter(
-                  voterDetails.getVote_FirstName(),
-                  voterDetails.getVote_LastName(),
-                  voterDetails.getVote_Course(),
-                  voterDetails.getVote_IdNumber(),
-                  voterDetails.getVote_email(),
-                  isVoted);
-          v.setId(voterDetails.getId());
-          i.putExtra("voterDetails", v);
-          i.putExtra("frgToLoad", "nav_camera");
-          startActivity(i);
-          finish();
         }
       });
   }

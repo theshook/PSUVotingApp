@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -83,8 +84,18 @@ public class AuditorActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int i) {
+
+            final ProgressDialog pd = new ProgressDialog(AuditorActivity.this);
+            pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pd.setMessage("Fetching data. . . ");
+            pd.setIndeterminate(true);
+            pd.setCancelable(false);
+            pd.show();
+
             countVotes(db.collection("partylist").document(AuditorAdapter._id));
             updateVoter();
+
+            pd.dismiss();
           }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -126,8 +137,8 @@ public class AuditorActivity extends AppCompatActivity {
                 v.setId(voterDetails.getId());
                 i.putExtra("voterDetails", v);
                 i.putExtra("frgToLoad", "nav_camera");
-                startActivity(i);
                 finish();
+                startActivity(i);
               }
             });
   }

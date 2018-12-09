@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -78,6 +79,13 @@ public class VoterAdd extends AppCompatActivity {
           return;
         }
 
+        final ProgressDialog pd = new ProgressDialog(VoterAdd.this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage("Fetching data. . . ");
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
+        pd.show();
+
         CollectionReference dbVoter = db.collection("voter");
         Map<String, Boolean> isVoted = new HashMap<>();
         isVoted.put("president", false);
@@ -113,8 +121,10 @@ public class VoterAdd extends AppCompatActivity {
                       i.putExtra("voterDetails", v);
 
                       i.putExtra("frgToLoad", "nav_slideshow");
-                      startActivity(i);
+
                       finish();
+                      startActivity(i);
+                      pd.dismiss();
                     } else {
                       Toast.makeText(VoterAdd.this, "Please check your inputs.", Toast.LENGTH_SHORT).show();
                     }

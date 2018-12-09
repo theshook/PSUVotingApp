@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -82,6 +83,14 @@ public class PartyListUpdate extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int i) {
+
+            final ProgressDialog pd = new ProgressDialog(PartyListUpdate.this);
+            pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pd.setMessage("Fetching data. . . ");
+            pd.setIndeterminate(true);
+            pd.setCancelable(false);
+            pd.show();
+
             db.collection("partylist")
               .document(partyList.getId()).delete()
               .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -101,9 +110,11 @@ public class PartyListUpdate extends AppCompatActivity {
                     v.setId(voterDetails.getId());
                     i.putExtra("voterDetails", v);
 
+
                     i.putExtra("frgToLoad", "nav_gallery");
-                    startActivity(i);
                     finish();
+                    pd.dismiss();
+                    startActivity(i);
                   }
                 }
               });
@@ -142,6 +153,13 @@ public class PartyListUpdate extends AppCompatActivity {
           return;
         }
 
+        final ProgressDialog pd = new ProgressDialog(PartyListUpdate.this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage("Fetching data. . . ");
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
+        pd.show();
+
         db.collection("partylist").document(partyList.getId())
                 .update("firstName",fname,
                         "lastName", lname,
@@ -165,8 +183,9 @@ public class PartyListUpdate extends AppCompatActivity {
                     i.putExtra("voterDetails", v);
 
                     i.putExtra("frgToLoad", "nav_gallery");
-                    startActivity(i);
                     finish();
+                    pd.dismiss();
+                    startActivity(i);
                   }
                 });
 

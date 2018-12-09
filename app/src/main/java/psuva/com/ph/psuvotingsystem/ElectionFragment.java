@@ -111,6 +111,7 @@ public class ElectionFragment extends Fragment {
         v.setId(voterDetails.getId());
         i.putExtra("voterDetails", v);
         startActivity(i);
+        getActivity().finish();
       }
     });
   }
@@ -130,6 +131,7 @@ public class ElectionFragment extends Fragment {
         v.setId(voterDetails.getId());
         i.putExtra("voterDetails", v);
         startActivity(i);
+        getActivity().finish();
       }
     });
   }
@@ -149,6 +151,7 @@ public class ElectionFragment extends Fragment {
         v.setId(voterDetails.getId());
         i.putExtra("voterDetails", v);
         startActivity(i);
+        getActivity().finish();
       }
     });
   }
@@ -168,6 +171,7 @@ public class ElectionFragment extends Fragment {
         v.setId(voterDetails.getId());
         i.putExtra("voterDetails", v);
         startActivity(i);
+        getActivity().finish();
       }
     });
   }
@@ -187,6 +191,7 @@ public class ElectionFragment extends Fragment {
         v.setId(voterDetails.getId());
         i.putExtra("voterDetails", v);
         startActivity(i);
+        getActivity().finish();
       }
     });
   }
@@ -206,6 +211,7 @@ public class ElectionFragment extends Fragment {
         v.setId(voterDetails.getId());
         i.putExtra("voterDetails", v);
         startActivity(i);
+        getActivity().finish();
       }
     });
   }
@@ -225,6 +231,7 @@ public class ElectionFragment extends Fragment {
         v.setId(voterDetails.getId());
         i.putExtra("voterDetails", v);
         startActivity(i);
+        getActivity().finish();
       }
     });
   }
@@ -244,6 +251,7 @@ public class ElectionFragment extends Fragment {
         v.setId(voterDetails.getId());
         i.putExtra("voterDetails", v);
         startActivity(i);
+        getActivity().finish();
       }
     });
   }

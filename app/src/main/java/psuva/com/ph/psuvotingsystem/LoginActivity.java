@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -68,6 +69,13 @@ public class LoginActivity extends AppCompatActivity {
           return;
         }
 
+        final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage("Fetching data. . . ");
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
+        pd.show();
+
         Query logInfo = voterCredentials
                 .whereEqualTo("vote_email", username)
                 .whereEqualTo("vote_IdNumber", password);
@@ -94,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                   i.putExtra("voterDetails", voterDetails);
                   startActivity(i);
                   finish();
+                  pd.dismiss();
                   return;
 
                 }

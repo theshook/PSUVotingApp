@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -71,6 +72,13 @@ public class PartyListAdd extends AppCompatActivity {
           return;
         }
 
+        final ProgressDialog pd = new ProgressDialog(PartyListAdd.this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage("Fetching data. . . ");
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
+        pd.show();
+
         CollectionReference dbPartyList = db.collection("partylist");
         PartyList partyList = new PartyList(fname, lname, spinP, spinPartyList, 0);
         dbPartyList.add(partyList)
@@ -93,8 +101,9 @@ public class PartyListAdd extends AppCompatActivity {
                 i.putExtra("voterDetails", v);
 
                 i.putExtra("frgToLoad", "nav_gallery");
-                startActivity(i);
+                pd.dismiss();
                 finish();
+                startActivity(i);
               } else {
                 Toast.makeText(PartyListAdd.this, "Please check your inputs.", Toast.LENGTH_SHORT).show();
               }

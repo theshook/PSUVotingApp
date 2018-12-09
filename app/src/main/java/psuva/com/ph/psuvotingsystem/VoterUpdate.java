@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -80,6 +81,13 @@ public class VoterUpdate extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int i) {
+            final ProgressDialog pd = new ProgressDialog(VoterUpdate.this);
+            pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pd.setMessage("Fetching data. . . ");
+            pd.setIndeterminate(true);
+            pd.setCancelable(false);
+            pd.show();
+
             db.collection("voter")
                     .document(voter.getId()).delete()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -101,8 +109,10 @@ public class VoterUpdate extends AppCompatActivity {
                           i.putExtra("voterDetails", v);
 
                           i.putExtra("frgToLoad", "nav_slideshow");
-                          startActivity(i);
+
                           finish();
+                          startActivity(i);
+                          pd.dismiss();
                         }
                       }
                     });
@@ -150,6 +160,13 @@ public class VoterUpdate extends AppCompatActivity {
           return;
         }
 
+        final ProgressDialog pd = new ProgressDialog(VoterUpdate.this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage("Fetching data. . . ");
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
+        pd.show();
+
         db.collection("voter").document(voter.getId())
                 .update("vote_Course", spinCourse,
                         "vote_FirstName", fname,
@@ -174,8 +191,9 @@ public class VoterUpdate extends AppCompatActivity {
                     i.putExtra("voterDetails", v);
 
                     i.putExtra("frgToLoad", "nav_slideshow");
-                    startActivity(i);
                     finish();
+                    startActivity(i);
+                    pd.dismiss();
                   }
                 });
 
