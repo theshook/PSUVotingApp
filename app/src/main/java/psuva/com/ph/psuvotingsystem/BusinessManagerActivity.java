@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BusinessManagerActivity extends AppCompatActivity {
 
@@ -79,9 +81,40 @@ public class BusinessManagerActivity extends AppCompatActivity {
           countVotes(db.collection("partylist").document(obj.toString()));
           Log.d("TAG THIS PARTY LIST GET", "onClick: " + obj.toString());
         }
-
+        updateVoter();
       }
     });
+  }
+
+  private void updateVoter() {
+    db.collection("voter").document(voterDetails.getId())
+            .update("isVoted.bm1", true)
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+              @Override
+              public void onSuccess(Void aVoid) {
+                Toast.makeText(BusinessManagerActivity.this, "Succesfully voted.", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(BusinessManagerActivity.this, MainActivity.class);
+
+                Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+
+                if (isVoted.containsKey("bm1")) {
+                  isVoted.put("bm1", true);
+                }
+
+                Voter v = new Voter(
+                        voterDetails.getVote_FirstName(),
+                        voterDetails.getVote_LastName(),
+                        voterDetails.getVote_Course(),
+                        voterDetails.getVote_IdNumber(),
+                        voterDetails.getVote_email(),
+                        isVoted);
+                v.setId(voterDetails.getId());
+                i.putExtra("voterDetails", v);
+                i.putExtra("frgToLoad", "nav_camera");
+                startActivity(i);
+                finish();
+              }
+            });
   }
 
   private Task<Void> countVotes(final DocumentReference partylist) {

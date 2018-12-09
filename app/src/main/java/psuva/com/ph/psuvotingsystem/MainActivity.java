@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity
 
   FragmentTransaction fragmentTransaction;
   TextView txtView3;
+  NavigationView navigationView;
+  private Voter voterDetails;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +37,34 @@ public class MainActivity extends AppCompatActivity
 
     txtView3 = findViewById(R.id.textView3);
 
-    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+    navigationView = (NavigationView) findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(this);
 
+    voterDetails = (Voter) getIntent().getSerializableExtra("voterDetails");
+
+    if (voterDetails.getVote_IdNumber().equals("1") && voterDetails.getVote_LastName().equals("Admin")) {
+      hideItemForAdmin();
+    } else {
+      hideItemForVoter();
+    }
+
+
     loadFragmentFromActivity();
+  }
+
+  private void hideItemForAdmin() {
+    navigationView = (NavigationView) findViewById(R.id.nav_view);
+    Menu nav_Menu = navigationView.getMenu();
+    nav_Menu.findItem(R.id.nav_camera).setVisible(false);
+  }
+
+  private void hideItemForVoter() {
+    navigationView = (NavigationView) findViewById(R.id.nav_view);
+    Menu nav_Menu = navigationView.getMenu();
+    nav_Menu.findItem(R.id.nav_gallery).setVisible(false);
+    nav_Menu.findItem(R.id.nav_slideshow).setVisible(false);
+    nav_Menu.findItem(R.id.nav_slideshow).setVisible(false);
+    nav_Menu.findItem(R.id.nav_result).setVisible(false);
   }
 
   private void loadFragmentFromActivity() {
@@ -60,6 +86,12 @@ public class MainActivity extends AppCompatActivity
       } else if(intentFragment.equals("nav_slideshow")) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new VoterFragment());
+        fragmentTransaction.commit();
+        txtView3.setVisibility(View.GONE);
+
+      } else if (intentFragment.equals("nav_result")) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, new ResultFragment());
         fragmentTransaction.commit();
         txtView3.setVisibility(View.GONE);
 
@@ -123,6 +155,12 @@ public class MainActivity extends AppCompatActivity
     } else if (id == R.id.nav_slideshow) {
       fragmentTransaction = getSupportFragmentManager().beginTransaction();
       fragmentTransaction.replace(R.id.fragment_container, new VoterFragment());
+      fragmentTransaction.commit();
+      txtView3.setVisibility(View.GONE);
+
+    } else if (id == R.id.nav_result) {
+      fragmentTransaction = getSupportFragmentManager().beginTransaction();
+      fragmentTransaction.replace(R.id.fragment_container, new ResultFragment());
       fragmentTransaction.commit();
       txtView3.setVisibility(View.GONE);
 

@@ -80,9 +80,40 @@ public class PublicRelationsOfficeActivity extends AppCompatActivity {
           countVotes(db.collection("partylist").document(obj.toString()));
           Log.d("TAG THIS PARTY LIST GET", "onClick: " + obj.toString());
         }
-
+        updateVoter();
       }
     });
+  }
+
+  private void updateVoter() {
+    db.collection("voter").document(voterDetails.getId())
+            .update("isVoted.pro1", true)
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+              @Override
+              public void onSuccess(Void aVoid) {
+                Toast.makeText(PublicRelationsOfficeActivity.this, "Succesfully voted.", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(PublicRelationsOfficeActivity.this, MainActivity.class);
+
+                Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+
+                if (isVoted.containsKey("pro1")) {
+                  isVoted.put("pro1", true);
+                }
+
+                Voter v = new Voter(
+                        voterDetails.getVote_FirstName(),
+                        voterDetails.getVote_LastName(),
+                        voterDetails.getVote_Course(),
+                        voterDetails.getVote_IdNumber(),
+                        voterDetails.getVote_email(),
+                        isVoted);
+                v.setId(voterDetails.getId());
+                i.putExtra("voterDetails", v);
+                i.putExtra("frgToLoad", "nav_camera");
+                startActivity(i);
+                finish();
+              }
+            });
   }
 
   private Task<Void> countVotes(final DocumentReference partylist) {

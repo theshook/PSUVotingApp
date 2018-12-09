@@ -74,12 +74,13 @@ public class ExecutiveVicePresidentActivity extends AppCompatActivity {
           return;
         }
         countVotes(db.collection("partylist").document(ExecutiveVicePresidentAdapter._id));
+        updateVoter();
       }
     });
   }
   private void updateVoter() {
     db.collection("voter").document(voterDetails.getId())
-            .update("isVoted.president", true)
+            .update("isVoted.evp", true)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
               @Override
               public void onSuccess(Void aVoid) {
@@ -88,8 +89,8 @@ public class ExecutiveVicePresidentActivity extends AppCompatActivity {
 
                 Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
 
-                if (isVoted.containsKey("president")) {
-                  isVoted.put("president", true);
+                if (isVoted.containsKey("evp")) {
+                  isVoted.put("evp", true);
                 }
 
                 Voter v = new Voter(

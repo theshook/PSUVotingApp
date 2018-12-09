@@ -75,13 +75,14 @@ public class CommunicationAcitivity extends AppCompatActivity {
           return;
         }
         countVotes(db.collection("partylist").document(CommunicationAdapter._id));
+        updateVoter();
       }
     });
   }
 
   private void updateVoter() {
     db.collection("voter").document(voterDetails.getId())
-            .update("isVoted.president", true)
+            .update("isVoted.vcc", true)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
               @Override
               public void onSuccess(Void aVoid) {
@@ -90,8 +91,8 @@ public class CommunicationAcitivity extends AppCompatActivity {
 
                 Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
 
-                if (isVoted.containsKey("president")) {
-                  isVoted.put("president", true);
+                if (isVoted.containsKey("vcc")) {
+                  isVoted.put("vcc", true);
                 }
 
                 Voter v = new Voter(

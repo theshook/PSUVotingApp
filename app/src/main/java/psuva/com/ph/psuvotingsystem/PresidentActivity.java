@@ -85,7 +85,7 @@ public class PresidentActivity extends AppCompatActivity {
         }
 
         countVotes(db.collection("partylist").document(PresidentAdapter._id));
-
+        updateVoter();
 
       }
     });

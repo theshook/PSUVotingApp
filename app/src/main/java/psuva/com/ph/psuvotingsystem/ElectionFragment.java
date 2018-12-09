@@ -2,6 +2,7 @@ package psuva.com.ph.psuvotingsystem;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -66,10 +67,22 @@ public class ElectionFragment extends Fragment {
 
     String president = String.valueOf(voterDetails.getIsVoted().get("president"));
     String evp = String.valueOf(voterDetails.getIsVoted().get("evp"));
+    String bm1 = String.valueOf(voterDetails.getIsVoted().get("bm1"));
+    String pro1 = String.valueOf(voterDetails.getIsVoted().get("pro1"));
+    String vcc = String.valueOf(voterDetails.getIsVoted().get("vcc"));
+    String vcpa = String.valueOf(voterDetails.getIsVoted().get("vcpa"));
+    String vcsrw = String.valueOf(voterDetails.getIsVoted().get("vcsrw"));
+    String auditor = String.valueOf(voterDetails.getIsVoted().get("auditor"));
 
-    Log.d("TAG THIS PARTY LIST GET", "onClick: AUDITOR " + voterDetails.getIsVoted().get("auditor"));
+
     checkIfVoted(president, btnNext);
     checkIfVoted(evp, btnNext2);
+    checkIfVoted(vcpa, btnNext3);
+    checkIfVoted(vcc, btnNext4);
+    checkIfVoted(vcsrw, btnNext5);
+    checkIfVoted(auditor, btnNext6);
+    checkIfVoted(bm1, btnNext7);
+    checkIfVoted(pro1, btnNext8);
 
     btnNextOnclick();
     btnNext2Onclick();
@@ -235,11 +248,11 @@ public class ElectionFragment extends Fragment {
     });
   }
 
-
-
   private boolean checkIfVoted(String b, Button btn) {
     if (b.equals("true")) {
-      btn.setVisibility(View.INVISIBLE);
+      btn.setText(btn.getText().toString() + " (VOTED)");
+      btn.setBackgroundColor(Color.GRAY);
+      btn.setEnabled(false);
       return true;
     }
 
