@@ -18,6 +18,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class VoterAdd extends AppCompatActivity {
 
   private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -73,7 +76,19 @@ public class VoterAdd extends AppCompatActivity {
         }
 
         CollectionReference dbVoter = db.collection("voter");
-        Voter voter = new Voter(fname, lname, spinCourse, id, email);
+        Map<String, Boolean> isVoted = new HashMap<>();
+        isVoted.put("president", false);
+        isVoted.put("evp", false);
+        isVoted.put("vcpa", false);
+        isVoted.put("vcc", false);
+        isVoted.put("vcsrw", false);
+        isVoted.put("auditor", false);
+        isVoted.put("bm1", false);
+        isVoted.put("bm2", false);
+        isVoted.put("pro1", false);
+        isVoted.put("pro2", false);
+
+        Voter voter = new Voter(fname, lname, spinCourse, id, email, isVoted);
 
         dbVoter.add(voter)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {

@@ -1,5 +1,6 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity
         txtView3.setVisibility(View.GONE);
 
       } else if (intentFragment.equals("nav_manage")) {
-
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
       }
     }
   }
@@ -125,6 +127,9 @@ public class MainActivity extends AppCompatActivity
       txtView3.setVisibility(View.GONE);
 
     } else if (id == R.id.nav_manage) {
+      Intent i = new Intent(MainActivity.this, LoginActivity.class);
+      finish();
+      startActivity(i);
 
     }
 

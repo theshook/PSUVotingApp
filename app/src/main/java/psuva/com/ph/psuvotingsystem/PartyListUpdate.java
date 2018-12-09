@@ -127,10 +127,11 @@ public class PartyListUpdate extends AppCompatActivity {
           return;
         }
 
-        PartyList p = new PartyList(fname, lname, spinP, spinPartyList);
-
         db.collection("partylist").document(partyList.getId())
-                .set(p)
+                .update("firstName",fname,
+                        "lastName", lname,
+                        "position", spinP,
+                        "partyList", spinPartyList)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                   @Override
                   public void onSuccess(Void aVoid) {

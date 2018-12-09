@@ -19,6 +19,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class VoterUpdate extends AppCompatActivity {
 
   private FirebaseFirestore db;
@@ -133,10 +136,12 @@ public class VoterUpdate extends AppCompatActivity {
           return;
         }
 
-        Voter v = new Voter(fname, lname, spinCourse, id, email);
-
         db.collection("voter").document(voter.getId())
-                .set(v)
+                .update("vote_Course", spinCourse,
+                        "vote_FirstName", fname,
+                        "vote_IdNumber", id,
+                        "vote_LastName", lname,
+                        "vote_email", email)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                   @Override
                   public void onSuccess(Void aVoid) {

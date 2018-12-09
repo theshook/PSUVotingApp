@@ -67,7 +67,7 @@ public class PartyListAdd extends AppCompatActivity {
         }
 
         CollectionReference dbPartyList = db.collection("partylist");
-        PartyList partyList = new PartyList(fname, lname, spinP, spinPartyList);
+        PartyList partyList = new PartyList(fname, lname, spinP, spinPartyList, 0);
         dbPartyList.add(partyList)
           .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override

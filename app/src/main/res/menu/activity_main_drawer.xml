@@ -17,6 +17,10 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Voter" />
         <item
+            android:id="@+id/nav_result"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Result" />
+        <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Logout" />

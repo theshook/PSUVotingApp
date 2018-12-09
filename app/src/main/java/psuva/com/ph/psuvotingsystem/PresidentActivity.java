@@ -1,5 +1,7 @@
 package psuva.com.ph.psuvotingsystem;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,9 +24,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class BusinessManagerActivity extends AppCompatActivity {
+public class PresidentActivity extends AppCompatActivity {
 
   private FirebaseFirestore db;
   private CollectionReference voted, president;
@@ -37,7 +42,7 @@ public class BusinessManagerActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_business_manager);
+    setContentView(R.layout.activity_president);
 
     db = FirebaseFirestore.getInstance();
 
@@ -50,17 +55,17 @@ public class BusinessManagerActivity extends AppCompatActivity {
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     partyLists = new ArrayList<>();
-    recyclerAdapter = new BusinessManagerAdapter(partyLists, this);
+    recyclerAdapter = new PresidentAdapter(partyLists, this);
 
     recyclerView.setAdapter(recyclerAdapter);
 
     president = db.collection("partylist");
     voted = db.collection("voted");
 
-    Query bmQuery = president.whereEqualTo("position", "Business Manager");
+    Query presidentQuery = president.whereEqualTo("position", "President");
 
 
-    queryPositions(bmQuery);
+    queryPositions(presidentQuery);
 
     btnNextOnClick();
   }
@@ -69,19 +74,52 @@ public class BusinessManagerActivity extends AppCompatActivity {
     btnNext.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
+//        for(int i = 0, nsize = BusinessManagerAdapter.ids.size(); i < nsize; i++) {
+//          Object obj = BusinessManagerAdapter.ids.valueAt(i);
+//          Log.d("TAG THIS PARTY LIST GET", "onClick: " + obj.toString());
+//        }
 
-        if (BusinessManagerAdapter.ids.size() <= 0) {
-          Toast.makeText(BusinessManagerActivity.this, "Kindly select a Business Manager to vote.", Toast.LENGTH_SHORT).show();
+        if (PresidentAdapter._id.equals(null) || PresidentAdapter._id.equals("")) {
+          Toast.makeText(PresidentActivity.this, "Kindly select a President to vote.", Toast.LENGTH_SHORT).show();
           return;
         }
-        for(int i = 0, nsize = BusinessManagerAdapter.ids.size(); i < nsize; i++) {
-          Object obj = BusinessManagerAdapter.ids.valueAt(i);
-          countVotes(db.collection("partylist").document(obj.toString()));
-          Log.d("TAG THIS PARTY LIST GET", "onClick: " + obj.toString());
-        }
+
+        countVotes(db.collection("partylist").document(PresidentAdapter._id));
+
 
       }
     });
+  }
+
+  private void updateVoter() {
+    db.collection("voter").document(voterDetails.getId())
+      .update("isVoted.president", true)
+      .addOnSuccessListener(new OnSuccessListener<Void>() {
+        @Override
+        public void onSuccess(Void aVoid) {
+          Toast.makeText(PresidentActivity.this, "Succesfully voted.", Toast.LENGTH_SHORT).show();
+          Intent i = new Intent(PresidentActivity.this, MainActivity.class);
+
+          Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+
+          if (isVoted.containsKey("president")) {
+            isVoted.put("president", true);
+          }
+
+          Voter v = new Voter(
+                  voterDetails.getVote_FirstName(),
+                  voterDetails.getVote_LastName(),
+                  voterDetails.getVote_Course(),
+                  voterDetails.getVote_IdNumber(),
+                  voterDetails.getVote_email(),
+                  isVoted);
+          v.setId(voterDetails.getId());
+          i.putExtra("voterDetails", v);
+          i.putExtra("frgToLoad", "nav_camera");
+          startActivity(i);
+          finish();
+        }
+      });
   }
 
   private Task<Void> countVotes(final DocumentReference partylist) {
@@ -114,10 +152,28 @@ public class BusinessManagerActivity extends AppCompatActivity {
       public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
         if (!queryDocumentSnapshots.isEmpty()) {
           List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+
           for (final DocumentSnapshot d : list) {
             PartyList e = d.toObject(PartyList.class);
             e.setId(d.getId());
             partyLists.add(e);
+
+            countVotesQuery = voted.whereEqualTo("candidateId", d.getId());
+            countVotesQuery.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+              @Override
+              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                int counter = 0;
+                for (DocumentSnapshot ds : list) {
+                  Voted vd = ds.toObject(Voted.class);
+                  if (vd.getCandidateId().equals(d.getId())) {
+                    counter++;
+                    Log.d("TAG ME SIZE", "Total Votes for: " + vd.getCandidateId() + " (" + counter +")");
+                  }
+                }
+
+              }
+            });
           }
           Log.d("TAG ME SIZE", "onSuccess: " + list.size());
           recyclerAdapter.notifyDataSetChanged();

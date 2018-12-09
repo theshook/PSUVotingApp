@@ -13,22 +13,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".PartyListAdd" />
         <activity android:name=".PartyListUpdate" />
         <activity android:name=".VoterAdd" />
         <activity android:name=".VoterUpdate" />
         <activity android:name=".BusinessManagerActivity" />
+        <activity android:name=".PresidentActivity"></activity>
     </application>
 
 </manifest>

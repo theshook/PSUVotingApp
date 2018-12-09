@@ -24,8 +24,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
+
   private FirebaseFirestore db;
   private Button btnLogin;
   private EditText edtUsername, edtPassword;
@@ -79,9 +81,28 @@ public class LoginActivity extends AppCompatActivity {
                 Object p = document.get("vote_IdNumber");
                 if(username.equals(u) && password.equals(p)) {
                   Intent i = new Intent(LoginActivity.this, MainActivity.class);
+//                TODO: PASS THE LOGIN DETAILS
+//                  for (Map<String, Object> map : list) {
+//                    for (Map.Entry<String, Object> entry : map.entrySet()) {
+//                      String key = entry.getKey();
+//                      Object value = entry.getValue();
+//                    }
+//                  }
+                  Log.d("TAG THIS PARTY LIST GET", "onClick: " + document.get("isVoted").equals("president"));
+                  Map<String, Boolean> isVoted = (Map<String, Boolean>) document.get("isVoted");
+                  Voter voterDetails = new Voter(
+                          document.get("vote_FirstName").toString(),
+                          document.get("vote_LastName").toString(),
+                          document.get("vote_Course").toString(),
+                          document.get("vote_IdNumber").toString(),
+                          document.get("vote_email").toString(),
+                          isVoted);
+                  voterDetails.setId(document.getId());
+                  i.putExtra("voterDetails", voterDetails);
                   startActivity(i);
                   finish();
                   return;
+
                 }
               }
               Toast.makeText(LoginActivity.this, "Username or Password is invalid.", Toast.LENGTH_SHORT).show();

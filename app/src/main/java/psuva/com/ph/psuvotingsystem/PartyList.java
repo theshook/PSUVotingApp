@@ -7,17 +7,18 @@ import java.io.Serializable;
 public class PartyList implements Serializable {
   @Exclude private String id;
   private String firstName, lastName, position, partyList;
+  int votes;
 
   public PartyList() {
 
   }
 
-  public PartyList(String firstName, String lastName, String position, String partyList) {
-
+  public PartyList(String firstName, String lastName, String position, String partyList, int votes) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.position = position;
     this.partyList = partyList;
+    this.votes = votes;
   }
 
   public String getId() {
@@ -42,6 +43,10 @@ public class PartyList implements Serializable {
 
   public String getPartyList() {
     return partyList;
+  }
+
+  public int getVotes() {
+    return votes;
   }
 
 }
