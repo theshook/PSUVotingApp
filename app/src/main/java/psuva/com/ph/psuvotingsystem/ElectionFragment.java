@@ -102,14 +102,99 @@ public class ElectionFragment extends Fragment {
     });
   }
   private void btnNext2Onclick() {
+    btnNext2.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent i = new Intent(getContext(), ExecutiveVicePresidentActivity.class);
+        Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+        Voter v = new Voter(
+                voterDetails.getVote_FirstName(),
+                voterDetails.getVote_LastName(),
+                voterDetails.getVote_Course(),
+                voterDetails.getVote_IdNumber(),
+                voterDetails.getVote_email(),
+                isVoted);
+        v.setId(voterDetails.getId());
+        i.putExtra("voterDetails", v);
+        startActivity(i);
+      }
+    });
   }
   private void btnNext3Onclick() {
+    btnNext3.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent i = new Intent(getContext(), ProjectAndActivitiesActivity.class);
+        Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+        Voter v = new Voter(
+                voterDetails.getVote_FirstName(),
+                voterDetails.getVote_LastName(),
+                voterDetails.getVote_Course(),
+                voterDetails.getVote_IdNumber(),
+                voterDetails.getVote_email(),
+                isVoted);
+        v.setId(voterDetails.getId());
+        i.putExtra("voterDetails", v);
+        startActivity(i);
+      }
+    });
   }
   private void btnNext4Onclick() {
+    btnNext4.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent i = new Intent(getContext(), CommunicationAcitivity.class);
+        Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+        Voter v = new Voter(
+                voterDetails.getVote_FirstName(),
+                voterDetails.getVote_LastName(),
+                voterDetails.getVote_Course(),
+                voterDetails.getVote_IdNumber(),
+                voterDetails.getVote_email(),
+                isVoted);
+        v.setId(voterDetails.getId());
+        i.putExtra("voterDetails", v);
+        startActivity(i);
+      }
+    });
   }
   private void btnNext5Onclick() {
+    btnNext5.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent i = new Intent(getContext(), StudentRightsActivity.class);
+        Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+        Voter v = new Voter(
+                voterDetails.getVote_FirstName(),
+                voterDetails.getVote_LastName(),
+                voterDetails.getVote_Course(),
+                voterDetails.getVote_IdNumber(),
+                voterDetails.getVote_email(),
+                isVoted);
+        v.setId(voterDetails.getId());
+        i.putExtra("voterDetails", v);
+        startActivity(i);
+      }
+    });
   }
   private void btnNext6Onclick() {
+    btnNext6.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent i = new Intent(getContext(), AuditorActivity.class);
+        Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+        Voter v = new Voter(
+                voterDetails.getVote_FirstName(),
+                voterDetails.getVote_LastName(),
+                voterDetails.getVote_Course(),
+                voterDetails.getVote_IdNumber(),
+                voterDetails.getVote_email(),
+                isVoted);
+        v.setId(voterDetails.getId());
+        i.putExtra("voterDetails", v);
+        startActivity(i);
+      }
+    });
   }
   private void btnNext7Onclick() {
     btnNext7.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +216,23 @@ public class ElectionFragment extends Fragment {
     });
   }
   private void btnNext8Onclick() {
+    btnNext8.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent i = new Intent(getContext(), PublicRelationsOfficeActivity.class);
+        Map<String, Boolean> isVoted = (Map<String, Boolean>) voterDetails.getIsVoted();
+        Voter v = new Voter(
+                voterDetails.getVote_FirstName(),
+                voterDetails.getVote_LastName(),
+                voterDetails.getVote_Course(),
+                voterDetails.getVote_IdNumber(),
+                voterDetails.getVote_email(),
+                isVoted);
+        v.setId(voterDetails.getId());
+        i.putExtra("voterDetails", v);
+        startActivity(i);
+      }
+    });
   }
 
 
