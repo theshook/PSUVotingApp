@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
   FragmentTransaction fragmentTransaction;
-  TextView txtView3;
+  TextView txtView3, txtFullName, txtEmail;
   NavigationView navigationView;
   private Voter voterDetails;
 
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity
 
     txtView3 = findViewById(R.id.textView3);
 
+
     navigationView = (NavigationView) findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(this);
 
@@ -48,6 +49,11 @@ public class MainActivity extends AppCompatActivity
       hideItemForVoter();
     }
 
+    View headerView = navigationView.getHeaderView(0);
+    txtEmail = headerView.findViewById(R.id.txtEmail);
+    txtFullName = headerView.findViewById(R.id.txtFullName);
+    txtEmail.setText(voterDetails.getVote_email());
+    txtFullName.setText(voterDetails.getVote_LastName() + ", " + voterDetails.getVote_FirstName());
 
     loadFragmentFromActivity();
   }
