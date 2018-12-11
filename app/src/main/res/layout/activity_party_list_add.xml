@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PartyListAdd">
+    tools:context=".PartyListAdd"
+    android:background="@drawable/bg_psu_blur">
 
     <EditText
         android:id="@+id/txt_p_firstName2"

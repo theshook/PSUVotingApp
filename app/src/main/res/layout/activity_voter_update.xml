@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VoterUpdate">
+    tools:context=".VoterUpdate"
+    android:background="@drawable/bg_psu_blur">
 
     <EditText
         android:id="@+id/txt_v_firstName"

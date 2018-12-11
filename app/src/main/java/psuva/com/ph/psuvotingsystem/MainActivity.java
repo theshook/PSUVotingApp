@@ -9,10 +9,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -21,6 +35,8 @@ public class MainActivity extends AppCompatActivity
   TextView txtView3, txtFullName, txtEmail;
   NavigationView navigationView;
   private Voter voterDetails;
+  SimpleDateFormat simpleDateFormat;
+  String format;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -147,10 +163,39 @@ public class MainActivity extends AppCompatActivity
     int id = item.getItemId();
 
     if (id == R.id.nav_camera) {
-      fragmentTransaction = getSupportFragmentManager().beginTransaction();
-      fragmentTransaction.replace(R.id.fragment_container, new ElectionFragment());
-      fragmentTransaction.commit();
-      txtView3.setVisibility(View.GONE);
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+      simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+
+      Calendar c = Calendar.getInstance();
+
+      SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+      df.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+      String formattedDate = df.format(c.getTime());
+
+
+      Date startDate = null;
+      Date endDate = null;
+      try {
+        startDate = simpleDateFormat.parse(formattedDate+" 07:30");
+        endDate = simpleDateFormat.parse(formattedDate+" 15:00");
+
+        long difference= endDate.getTime()-startDate.getTime();
+        long seconds = difference / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+        if (minutes <= 450 && minutes > 0) {
+          Log.d("log_tag","Hours: "+hours+" Minutes: "+minutes);
+          fragmentTransaction = getSupportFragmentManager().beginTransaction();
+          fragmentTransaction.replace(R.id.fragment_container, new ElectionFragment());
+          fragmentTransaction.commit();
+          txtView3.setVisibility(View.GONE);
+        } else {
+          Toast.makeText(MainActivity.this, "You can only vote between 7:30AM to 3:00PM.", Toast.LENGTH_SHORT).show();
+        }
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
 
     } else if (id == R.id.nav_gallery) {
       fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -159,10 +204,11 @@ public class MainActivity extends AppCompatActivity
       txtView3.setVisibility(View.GONE);
 
     } else if (id == R.id.nav_slideshow) {
-      fragmentTransaction = getSupportFragmentManager().beginTransaction();
-      fragmentTransaction.replace(R.id.fragment_container, new VoterFragment());
-      fragmentTransaction.commit();
-      txtView3.setVisibility(View.GONE);
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, new VoterFragment());
+        fragmentTransaction.commit();
+        txtView3.setVisibility(View.GONE);
+
 
     } else if (id == R.id.nav_result) {
       fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -181,4 +227,5 @@ public class MainActivity extends AppCompatActivity
     drawer.closeDrawer(GravityCompat.START);
     return true;
   }
+
 }

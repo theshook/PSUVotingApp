@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
               }
+              pd.dismiss();
               Toast.makeText(LoginActivity.this, "Username or Password is invalid.", Toast.LENGTH_SHORT).show();
             }
           }

@@ -34,7 +34,7 @@ public class VoterAdapter  extends RecyclerView.Adapter<VoterAdapter.ViewHolder>
 
     holder.txtName_txtCourse.setText(listItem.getVote_LastName() + ", " + listItem.getVote_FirstName() + " (" + listItem.getVote_Course() +")");
     holder.txtId.setText("Id: " + listItem.getVote_IdNumber());
-    holder.txtEmail.setText("Email:" + listItem.getVote_Course());
+    holder.txtEmail.setText("Email:" + listItem.getVote_email());
   }
 
   @Override
