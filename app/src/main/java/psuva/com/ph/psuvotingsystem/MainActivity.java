@@ -163,27 +163,26 @@ public class MainActivity extends AppCompatActivity
     int id = item.getItemId();
 
     if (id == R.id.nav_camera) {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
-
       Calendar c = Calendar.getInstance();
-
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
       SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
       df.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
       String formattedDate = df.format(c.getTime());
+      String formattedDate1 = simpleDateFormat.format(c.getTime());
+
 
 
       Date startDate = null;
       Date endDate = null;
       try {
-        startDate = simpleDateFormat.parse(formattedDate+" 07:30");
-        endDate = simpleDateFormat.parse(formattedDate+" 15:00");
+        startDate = simpleDateFormat.parse(formattedDate);
+        endDate = simpleDateFormat.parse(formattedDate1+" 15:00");
 
         long difference= endDate.getTime()-startDate.getTime();
         long seconds = difference / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
-        long days = hours / 24;
         if (minutes <= 450 && minutes > 0) {
           Log.d("log_tag","Hours: "+hours+" Minutes: "+minutes);
           fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -191,7 +190,8 @@ public class MainActivity extends AppCompatActivity
           fragmentTransaction.commit();
           txtView3.setVisibility(View.GONE);
         } else {
-          Toast.makeText(MainActivity.this, "You can only vote between 7:30AM to 3:00PM.", Toast.LENGTH_SHORT).show();
+          Toast.makeText(MainActivity.this, "You can only vote between 7:30AM to 3:00PM."
+                  , Toast.LENGTH_SHORT).show();
         }
       } catch (ParseException e) {
         e.printStackTrace();
