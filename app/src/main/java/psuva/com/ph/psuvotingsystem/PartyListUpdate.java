@@ -18,8 +18,13 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class PartyListUpdate extends AppCompatActivity {
@@ -30,6 +35,8 @@ public class PartyListUpdate extends AppCompatActivity {
   private Spinner spinParty, spinPosition;
   private Button btnSave, btnDelete;
   private Voter voterDetails;
+
+  private ArrayAdapter<String> courseAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +58,37 @@ public class PartyListUpdate extends AppCompatActivity {
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     spinPosition.setAdapter(adapter);
 
-    ArrayAdapter<CharSequence> adapter1  = ArrayAdapter.createFromResource(this, R.array.PartyList, android.R.layout.simple_spinner_item);
-    adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    spinParty.setAdapter(adapter1);
+    final ProgressDialog pd = new ProgressDialog(PartyListUpdate.this);
+    pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    pd.setMessage("Fetching data. . . ");
+    pd.setIndeterminate(true);
+    pd.setCancelable(false);
+    pd.show();
+
+    courseAdapter = new ArrayAdapter<String>(PartyListUpdate.this, android.R.layout.simple_spinner_item);
+
+    db.collection("groups").orderBy("groups", Query.Direction.ASCENDING).get()
+            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+              @Override
+              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                  List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                  final List<String> courses = new ArrayList<String>();
+                  for (DocumentSnapshot d : list) {
+                    Groups p = d.toObject(Groups.class);
+                    p.setId(d.getId());
+                    courses.add(p.getGroups());
+                  }
+
+                  courseAdapter = new ArrayAdapter<String>(PartyListUpdate.this, android.R.layout.simple_spinner_item, courses);
+                  courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                  spinParty.setAdapter(courseAdapter);
+
+                  int spinnerParty = courseAdapter.getPosition(partyList.getPartyList());
+                  spinParty.setSelection(spinnerParty);
+                }
+              }
+            });
 
     // Set the Value
     edtFname.setText(partyList.getFirstName());
@@ -63,8 +98,9 @@ public class PartyListUpdate extends AppCompatActivity {
     int spinnerPosition = adapter.getPosition(partyList.getPosition());
     spinPosition.setSelection(spinnerPosition);
 
-    int spinnerParty = adapter1.getPosition(partyList.getPartyList());
-    spinParty.setSelection(spinnerParty);
+
+
+    pd.dismiss();
 
     // Button Click Listener
     btnSaveOnClick();

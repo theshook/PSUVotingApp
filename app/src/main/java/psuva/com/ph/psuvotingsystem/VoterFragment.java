@@ -1,15 +1,21 @@
 package psuva.com.ph.psuvotingsystem;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,7 +33,8 @@ import java.util.List;
 public class VoterFragment extends Fragment {
 
   private FirebaseFirestore db;
-  TextView txt_v_add;
+  private TextView txt_v_add;
+  private Spinner spinner;
   private RecyclerView recyclerView;
   private RecyclerView.Adapter recyclerAdapter;
   private List<Voter> voters;
@@ -57,27 +64,83 @@ public class VoterFragment extends Fragment {
 
     recyclerView.setAdapter(recyclerAdapter);
 
-    db.collection("voter").orderBy("vote_LastName", Query.Direction.ASCENDING).get()
+    spinner = view.findViewById(R.id.spinner);
+
+    txt_v_add = view.findViewById(R.id.txt_v_add);
+    txt_p_addClick();
+    spinnerOnChange();
+    return view;
+  }
+
+  private void spinnerOnChange() {
+    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+          String course = spinner.getSelectedItem().toString();
+          filterVoter(course);
+
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> adapterView) {
+
+      }
+    });
+  }
+
+  @Override
+  public void onStart() {
+    db.collection("course").orderBy("course", Query.Direction.ASCENDING).get()
+      .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        @Override
+        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+          if (!queryDocumentSnapshots.isEmpty()) {
+            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+            final List<String> courses = new ArrayList<String>();
+            for (DocumentSnapshot d : list) {
+              Course p = d.toObject(Course.class);
+              p.setId(d.getId());
+              courses.add(p.getCourse());
+            }
+            ArrayAdapter<String> courseAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, courses);
+            courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(courseAdapter);
+          }
+        }
+      });
+    super.onStart();
+  }
+
+  private void filterVoter(String course) {
+    final ProgressDialog pd = new ProgressDialog(getContext());
+    pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    pd.setMessage("Fetching data. . . ");
+    pd.setIndeterminate(true);
+    pd.setCancelable(false);
+    pd.show();
+    db.collection("voter")
+            .whereEqualTo("vote_Course", course)
+            .orderBy("vote_LastName", Query.Direction.ASCENDING).get()
             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
               @Override
               public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 if (!queryDocumentSnapshots.isEmpty()) {
                   List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-
+                  voters.clear();
                   for (DocumentSnapshot d : list) {
                     Voter p = d.toObject(Voter.class);
                     p.setId(d.getId());
                     voters.add(p);
                   }
                   recyclerAdapter.notifyDataSetChanged();
+                  pd.dismiss();
+                } else {
+                  Toast.makeText(getContext(), "No Available Data.", Toast.LENGTH_SHORT).show();
+                  pd.dismiss();
                 }
               }
             });
-
-    txt_v_add = view.findViewById(R.id.txt_v_add);
-    txt_p_addClick();
-
-    return view;
   }
 
   private void txt_p_addClick() {

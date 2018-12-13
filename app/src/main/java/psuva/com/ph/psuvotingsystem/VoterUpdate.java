@@ -18,9 +18,14 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VoterUpdate extends AppCompatActivity {
@@ -32,6 +37,7 @@ public class VoterUpdate extends AppCompatActivity {
   private Spinner spinPosition;
   private Button btnSave, btnDelete;
   private Voter voterDetails;
+  private ArrayAdapter<String> courseAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +55,40 @@ public class VoterUpdate extends AppCompatActivity {
     spinPosition = findViewById(R.id.spinPosition2);
     btnSave = findViewById(R.id.btn_v_update);
     btnDelete = findViewById(R.id.btn_v_delete);
+    courseAdapter = new ArrayAdapter<String>(VoterUpdate.this, android.R.layout.simple_spinner_item);
 
-    ArrayAdapter<CharSequence> adapter  = ArrayAdapter.createFromResource(this, R.array.Course, android.R.layout.simple_spinner_item);
-    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    spinPosition.setAdapter(adapter);
+    final ProgressDialog pd = new ProgressDialog(VoterUpdate.this);
+    pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    pd.setMessage("Fetching data. . . ");
+    pd.setIndeterminate(true);
+    pd.setCancelable(false);
+    pd.show();
+
+    db.collection("course").orderBy("course", Query.Direction.ASCENDING).get()
+            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+              @Override
+              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                  List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                  final List<String> courses = new ArrayList<String>();
+                  for (DocumentSnapshot d : list) {
+                    Course p = d.toObject(Course.class);
+                    p.setId(d.getId());
+                    courses.add(p.getCourse());
+                  }
+
+                  courseAdapter = new ArrayAdapter<String>(VoterUpdate.this, android.R.layout.simple_spinner_item, courses);
+                  courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                  spinPosition.setAdapter(courseAdapter);
+
+                  // Set Value of Spinner
+                  int spinnerPosition = courseAdapter.getPosition(voter.getVote_Course());
+                  spinPosition.setSelection(spinnerPosition);
+                }
+              }
+            });
+
+
 
     // Set Value
     edtFname.setText(voter.getVote_FirstName());
@@ -60,9 +96,9 @@ public class VoterUpdate extends AppCompatActivity {
     edtNumber.setText(voter.getVote_IdNumber());
     edtEmail.setText(voter.getVote_email());
 
-    // Set Value of Spinner
-    int spinnerPosition = adapter.getPosition(voter.getVote_Course());
-    spinPosition.setSelection(spinnerPosition);
+
+
+    pd.dismiss();
 
     // Button Click Listener
     btnSaveOnClick();

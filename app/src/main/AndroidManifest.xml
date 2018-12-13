@@ -34,7 +34,11 @@
         <activity android:name=".CommunicationAcitivity" />
         <activity android:name=".StudentRightsActivity" />
         <activity android:name=".AuditorActivity" />
-        <activity android:name=".PublicRelationsOfficeActivity"></activity>
+        <activity android:name=".PublicRelationsOfficeActivity" />
+        <activity android:name=".CourseAdd" />
+        <activity android:name=".CourseUpdate" />
+        <activity android:name=".GroupsAdd" />
+        <activity android:name=".GroupsUpdate"></activity>
     </application>
 
 </manifest>

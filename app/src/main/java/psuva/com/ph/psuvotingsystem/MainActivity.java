@@ -117,6 +117,18 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
         txtView3.setVisibility(View.GONE);
 
+      } else if (intentFragment.equals("nav_groups")) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, new GroupsFragment());
+        fragmentTransaction.commit();
+        txtView3.setVisibility(View.GONE);
+
+      } else if (intentFragment.equals("nav_course")) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, new CourseFragment());
+        fragmentTransaction.commit();
+        txtView3.setVisibility(View.GONE);
+
       } else if (intentFragment.equals("nav_manage")) {
         Intent i = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(i);
@@ -134,27 +146,27 @@ public class MainActivity extends AppCompatActivity
     }
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.main, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
-
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
+//  @Override
+//  public boolean onCreateOptionsMenu(Menu menu) {
+//    // Inflate the menu; this adds items to the action bar if it is present.
+//    getMenuInflater().inflate(R.menu.main, menu);
+//    return true;
+//  }
+//
+//  @Override
+//  public boolean onOptionsItemSelected(MenuItem item) {
+//    // Handle action bar item clicks here. The action bar will
+//    // automatically handle clicks on the Home/Up button, so long
+//    // as you specify a parent activity in AndroidManifest.xml.
+//    int id = item.getItemId();
+//
+//    //noinspection SimplifiableIfStatement
+//    if (id == R.id.action_settings) {
+//      return true;
+//    }
+//
+//    return super.onOptionsItemSelected(item);
+//  }
 
   @SuppressWarnings("StatementWithEmptyBody")
   @Override
@@ -164,34 +176,42 @@ public class MainActivity extends AppCompatActivity
 
     if (id == R.id.nav_camera) {
       Calendar c = Calendar.getInstance();
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
       simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+
       SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
       df.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+      SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+      df1.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+
       String formattedDate = df.format(c.getTime());
-      String formattedDate1 = simpleDateFormat.format(c.getTime());
-
-
+      String formattedDate1 = df1.format(c.getTime());
 
       Date startDate = null;
       Date endDate = null;
       try {
         startDate = simpleDateFormat.parse(formattedDate);
-        endDate = simpleDateFormat.parse(formattedDate1+" 15:00");
+        endDate = simpleDateFormat.parse(formattedDate1+" 23:59:59");
 
         long difference= endDate.getTime()-startDate.getTime();
         long seconds = difference / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
-        if (minutes <= 450 && minutes > 0) {
+        if (minutes <= 1440 && minutes > 0) {
           Log.d("log_tag","Hours: "+hours+" Minutes: "+minutes);
+          Log.d("log_tag","Start: "+formattedDate);
+          Log.d("log_tag","End: "+formattedDate1+" 23:59:00");
           fragmentTransaction = getSupportFragmentManager().beginTransaction();
           fragmentTransaction.replace(R.id.fragment_container, new ElectionFragment());
           fragmentTransaction.commit();
           txtView3.setVisibility(View.GONE);
         } else {
-          Toast.makeText(MainActivity.this, "You can only vote between 7:30AM to 3:00PM."
+          Toast.makeText(MainActivity.this, "Can't vote for a while."
                   , Toast.LENGTH_SHORT).show();
+          Log.d("log_tag","Hours: "+hours+" Minutes: "+minutes);
+          Log.d("log_tag","Start: "+formattedDate);
+          Log.d("log_tag","End: "+formattedDate1+" 23:00");
         }
       } catch (ParseException e) {
         e.printStackTrace();
@@ -213,6 +233,18 @@ public class MainActivity extends AppCompatActivity
     } else if (id == R.id.nav_result) {
       fragmentTransaction = getSupportFragmentManager().beginTransaction();
       fragmentTransaction.replace(R.id.fragment_container, new ResultFragment());
+      fragmentTransaction.commit();
+      txtView3.setVisibility(View.GONE);
+
+    } else if (id == R.id.nav_groups) {
+    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+    fragmentTransaction.replace(R.id.fragment_container, new GroupsFragment());
+    fragmentTransaction.commit();
+    txtView3.setVisibility(View.GONE);
+
+    } else if (id == R.id.nav_course) {
+      fragmentTransaction = getSupportFragmentManager().beginTransaction();
+      fragmentTransaction.replace(R.id.fragment_container, new CourseFragment());
       fragmentTransaction.commit();
       txtView3.setVisibility(View.GONE);
 

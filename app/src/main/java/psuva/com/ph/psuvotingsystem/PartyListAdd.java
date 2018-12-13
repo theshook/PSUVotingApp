@@ -14,11 +14,18 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.security.acl.Group;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class PartyListAdd extends AppCompatActivity {
@@ -42,13 +49,31 @@ public class PartyListAdd extends AppCompatActivity {
     spinPosition = findViewById(R.id.spinPosition2);
     btnSave = findViewById(R.id.btn_p_save2);
 
-    ArrayAdapter<CharSequence> adapter  = ArrayAdapter.createFromResource(this, R.array.Positions, android.R.layout.simple_spinner_item);
+    db.collection("groups").orderBy("groups", Query.Direction.ASCENDING).get()
+            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+              @Override
+              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                  List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                  final List<String> courses = new ArrayList<String>();
+                  for (DocumentSnapshot d : list) {
+                    Groups p = d.toObject(Groups.class);
+                    p.setId(d.getId());
+                    courses.add(p.getGroups());
+                  }
+
+                  ArrayAdapter<String> courseAdapter = new ArrayAdapter<String>(PartyListAdd.this, android.R.layout.simple_spinner_item, courses);
+                  courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                  spinParty.setAdapter(courseAdapter);
+                }
+              }
+            });
+
+    ArrayAdapter<CharSequence> adapter  = ArrayAdapter.createFromResource(PartyListAdd.this, R.array.Positions, android.R.layout.simple_spinner_item);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     spinPosition.setAdapter(adapter);
 
-    ArrayAdapter<CharSequence> adapter1  = ArrayAdapter.createFromResource(this, R.array.PartyList, android.R.layout.simple_spinner_item);
-    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    spinParty.setAdapter(adapter1);
+
 
     btnSaveOnClick();
   }

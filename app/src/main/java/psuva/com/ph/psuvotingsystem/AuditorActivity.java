@@ -144,22 +144,13 @@ public class AuditorActivity extends AppCompatActivity {
   }
 
   private Task<Void> countVotes(final DocumentReference partylist) {
-    // Create reference for new rating, for use inside the transaction
-//    final DocumentReference ratingRef = partylist.collection("partylist").document();
-
-    // In a transaction, add the new rating and update the aggregate totals
     return db.runTransaction(new Transaction.Function<Void>() {
       @Override
       public Void apply(Transaction transaction) throws FirebaseFirestoreException {
         PartyList pl = transaction.get(partylist).toObject(PartyList.class);
 
-        // Compute new number of ratings
         int newNumRatings = pl.getVotes() + 1;
-
-        // Set new restaurant info
         pl.votes = newNumRatings;
-
-        // Update restaurant
         transaction.set(partylist, pl);
 
         return null;
@@ -192,7 +183,6 @@ public class AuditorActivity extends AppCompatActivity {
                     Log.d("TAG ME SIZE", "Total Votes for: " + vd.getCandidateId() + " (" + counter +")");
                   }
                 }
-
               }
             });
           }
